@@ -14,7 +14,7 @@ short_description: 免費歌曲評審團（物理+美學+情感+AI詞評）
 # 🎼 歌曲評審團
 
 > 貼上 SUNO／YouTube 連結或上傳音檔，AI 幫你評歌：物理量測 ＋ 音樂家美學 ＋ 情感弧線 ＋ 詞評。
-> 免費、雲端、零安裝。
+> 免費、雲端、零安裝。也支援 [Windows 本機執行](#windows-安裝)。
 
 ---
 
@@ -136,7 +136,11 @@ CE < 7 時觸發「親聽檢查」警報。
 
 ## 快速開始
 
-### 本機執行（需 macOS/Linux + Python 3.10+）
+### 本機執行（需 macOS/Linux 或 Windows + Python 3.10+）
+
+**Windows 使用者**：執行 `setup_windows.bat` 一鍵安裝，然後 `run.bat` 啟動。
+
+**macOS / Linux**：
 
 ```bash
 # 克隆
