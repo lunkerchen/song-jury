@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>歌曲評審團 — 架構圖</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    background:linear-gradient(150deg,#fef3c7,#fed7aa,#fdba74);
+    min-height:100vh;padding:32px 16px;display:flex;flex-direction:column;align-items:center;
+    color:#431407;
+  }
+  h1{font-size:28px;margin-bottom:4px;text-shadow:0 1px 4px rgba(255,255,255,.6)}
+  .sub{font-size:14px;opacity:.7;margin-bottom:28px}
+
+  .canvas{
+    max-width:1000px;width:100%;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+
+  /* ── 共用卡片 ── */
+  .card{
+    background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+    border-radius:16px;padding:18px 22px;
+    box-shadow:0 4px 20px rgba(234,88,12,.12);
+    border:1px solid rgba(255,255,255,.5);
+    width:100%;position:relative;
+  }
+  .card-label{
+    font-size:13px;font-weight:700;letter-spacing:.3px;margin-bottom:10px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .card-label .badge{
+    display:inline-block;padding:1px 10px;border-radius:999px;font-size:11px;
+    color:#fff;font-weight:600;
+  }
+  .row{
+    display:flex;flex-wrap:wrap;gap:10px;
+  }
+  .row>*{flex:1;min-width:140px}
+  .box{
+    background:#fff;border-radius:10px;padding:10px 14px;
+    border:1px solid rgba(0,0,0,.06);font-size:13px;line-height:1.5;
+  }
+  .box .t{font-weight:700;font-size:14px;margin-bottom:2px}
+  .box .s{font-size:12px;opacity:.7}
+  .box .tag{
+    display:inline-block;font-size:10px;padding:0 6px;border-radius:4px;
+    margin-top:4px;font-weight:600;
+  }
+
+  /* ── 箭頭 ── */
+  .arrow{
+    color:#c2410c;font-size:13px;font-weight:600;text-align:center;
+    line-height:1.2;position:relative;
+  }
+  .arrow::before{
+    content:"";display:block;width:2px;height:10px;
+    background:#c2410c;margin:0 auto 2px;
+  }
+
+  /* ── 顏色 ── */
+  .bg-phys{background:#e0f2fe} .bdg-phys{background:#0284c7}
+  .bg-aes{background:#fae8ff} .bdg-aes{background:#a21caf}
+  .bg-emot{background:#fce7f3} .bdg-emot{background:#db2777}
+  .bg-llm{background:#fef9c3} .bdg-llm{background:#ca8a04}
+  .bg-cache{background:#dcfce7} .bdg-cache{background:#16a34a}
+  .bg-input{background:#f1f5f9} .bdg-input{background:#475569}
+  .bg-rank{background:#fff7ed;border-color:#fdba74}
+
+  /* ── 輸入區塊特殊排版 ── */
+  .input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media(max-width:560px){.input-grid{grid-template-columns:1fr}}
+
+  /* ── 子項列表 ── */
+  .sub-items{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}
+  .sub-item{
+    font-size:11px;padding:2px 8px;border-radius:6px;
+    background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.06);
+  }
+
+  /* ── 快取區塊 ── */
+  .cache-row{display:flex;gap:10px;margin-top:6px}
+  .cache-row>*{flex:1;min-width:0}
+  .cache-box{
+    background:rgba(255,255,255,.6);border-radius:8px;padding:8px 10px;
+    font-size:12px;border:1px dashed #16a34a;
+  }
+  .cache-box .t{font-weight:700;font-size:12px}
+  .cache-box .s{font-size:11px;opacity:.7}
+
+  /* ── 圖例 ── */
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+    margin-top:8px;
+  }
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:12px}
+  .legend-dot{width:10px;height:10px;border-radius:4px;flex-shrink:0}
+
+  /* ── 底線說明 ── */
+  .footer-note{font-size:12px;opacity:.6;text-align:center;margin-top:16px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<h1>🎼 歌曲評審團</h1>
+<p class="sub">三關評審 + 情感弧線 + LLM 詞評 — 架構圖</p>
+
+<div class="canvas">
+
+  <!-- ──── 輸入 ──── -->
+  <div class="card">
+    <div class="card-label"><span class="badge bdg-input">輸入</span> 來源</div>
+    <div class="input-grid">
+      <div class="box" style="background:#f1f5f9">
+        <div class="t">🔗 SUNO 連結</div>
+        <div class="s">自動抓歌 + 抓詞</div>
+        <div class="tag bdg-input">suno.com/song/…</div>
+      </div>
+      <div class="box" style="background:#f1f5f9">
+        <div class="t">▶ YouTube 連結</div>
+        <div class="s">yt-dlp 下載轉 mp3</div>
+        <div class="tag bdg-input">需另給歌詞</div>
+      </div>
+      <div class="box" style="background:#f1f5f9">
+        <div class="t">📁 上傳音檔</div>
+        <div class="s">mp3 / wav 直接載入</div>
+        <div class="tag bdg-input">需另給歌詞</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">評審團.py · 整合排程</div>
+
+  <!-- ──── 第一關 ──── -->
+  <div class="card">
+    <div class="card-label"><span class="badge bdg-phys">①</span> 第一關 · 物理量測</div>
+    <div class="box bg-phys">
+      <div class="t">song_scorer.py</div>
+      <div class="s">librosa + pyloudnorm + parselmouth · 0–100 分</div>
+      <div class="sub-items">
+        <span class="sub-item">🎚 響度 15%</span>
+        <span class="sub-item">📊 動態範圍 20%</span>
+        <span class="sub-item">🎛 頻譜平衡 20%</span>
+        <span class="sub-item">🔊 立體聲寬度 10%</span>
+        <span class="sub-item">✂ 削波檢測 10%</span>
+        <span class="sub-item">🏗 層次鋪陳 15%</span>
+        <span class="sub-item">🎵 和聲豐富度 10%</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:6px;font-size:12px;opacity:.7">
+      <span>⚡ Krumhansl-Kessler 調性偵測</span>
+      <span>·</span>
+      <span>🥁 BPM + 拍點網格</span>
+      <span>·</span>
+      <span><em>（選配）人聲 7 維演唱分析</em></span>
+    </div>
+  </div>
+
+  <div class="arrow">第二關 · 美學模型</div>
+
+  <!-- ──── 第二關 A ──── -->
+  <div class="card">
+    <div class="row">
+      <div class="box bg-aes">
+        <div class="t">🎓 SongEval</div>
+        <div class="s">音樂人訓練模型 · 1–5 分</div>
+        <div class="sub-items">
+          <span class="sub-item">連貫性</span>
+          <span class="sub-item">音樂性</span>
+          <span class="sub-item">記憶點</span>
+          <span class="sub-item">結構清晰度</span>
+          <span class="sub-item">人聲自然度</span>
+        </div>
+        <div class="tag bdg-aes" style="margin-top:6px">ASLP-lab · CC BY-NC-SA</div>
+      </div>
+      <div class="box bg-aes">
+        <div class="t">🏭 Audiobox (Meta)</div>
+        <div class="s">美學四軸 · 1–10 分</div>
+        <div class="sub-items">
+          <span class="sub-item">PQ 製作品質</span>
+          <span class="sub-item">CE 感染力 ⚠️</span>
+          <span class="sub-item">CU 實用性</span>
+          <span class="sub-item">PC 複雜度</span>
+        </div>
+        <div class="tag bdg-aes" style="margin-top:6px">audiobox-aesthetics</div>
+      </div>
+    </div>
+    <div style="font-size:12px;opacity:.7;margin-top:6px;text-align:center">
+      CE &lt; 7 觸發「親聽檢查」
+    </div>
+  </div>
+
+  <div class="arrow">情感弧線 · 中介</div>
+
+  <!-- ──── 情感弧線 ──── -->
+  <div class="card">
+    <div class="card-label"><span class="badge bdg-emot">◈</span> 情感弧線 · NRC-VAD</div>
+    <div class="box bg-emot">
+      <div class="t">情感弧線.py</div>
+      <div class="s">Russell 情感環狀模型 — Valence(愉悅度) × Arousal(激動度)</div>
+      <div class="row" style="margin-top:6px">
+        <span class="sub-item">📖 中英雙語詞庫（簡+繁）</span>
+        <span class="sub-item">🔍 最長匹配掃描</span>
+        <span class="sub-item">📈 matplotlib 雙圖</span>
+        <span class="sub-item">📊 擺幅 ≥0.05 = 有意義移動</span>
+      </div>
+    </div>
+    <div style="font-size:12px;opacity:.7;margin-top:6px;text-align:center">
+      → 數據餵給詞評 LLM 做交叉引用佐證
+    </div>
+  </div>
+
+  <div class="arrow">第三關 · AI 詞評</div>
+
+  <!-- ──── 第三關 ──── -->
+  <div class="card">
+    <div class="card-label"><span class="badge bdg-llm">③</span> 第三關 · LLM 詞評</div>
+    <div class="row">
+      <div class="box bg-llm">
+        <div class="t">🥇 DeepSeek v4-pro</div>
+        <div class="s">671B · 中文母語最強</div>
+        <div class="tag bdg-llm">240s timeout</div>
+      </div>
+      <div class="box bg-llm">
+        <div class="t">🥇 Groq gpt-oss-120b</div>
+        <div class="s">免費 · 快 · 會交叉引用</div>
+        <div class="tag bdg-llm">90s timeout</div>
+      </div>
+      <div class="box bg-llm">
+        <div class="t">🥉 Groq llama-70b</div>
+        <div class="s">免費 · 最穩底線</div>
+        <div class="tag bdg-llm">90s timeout</div>
+      </div>
+    </div>
+    <div class="sub-items" style="margin-top:8px;justify-content:center">
+      <span class="sub-item">題材定尺</span>
+      <span class="sub-item">七維度雙分數</span>
+      <span class="sub-item">情感三支柱</span>
+      <span class="sub-item">傳播檢查表</span>
+      <span class="sub-item">句級修法</span>
+      <span class="sub-item">場景適配</span>
+      <span class="sub-item">合議庭裁決</span>
+      <span class="sub-item"><strong>【詞總分】X.X</strong></span>
+    </div>
+  </div>
+
+  <div class="arrow">輸出 · 儲存</div>
+
+  <!-- ──── 快取 + 排行榜 ──── -->
+  <div class="card">
+    <div class="card-label"><span class="badge bdg-cache">📦</span> 快取系統</div>
+    <div class="box bg-cache">
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px;font-size:13px;font-weight:600">
+        <span>🟢 完全命中 · 零重算</span>
+        <span>🟡 詞評命中 · 重生裁決</span>
+        <span>🔴 全新 · 完整三關</span>
+      </div>
+      <div class="cache-row">
+        <div class="cache-box">
+          <div class="t">📄 reports.json</div>
+          <div class="s">音訊三關結果 · audio_hash 索引</div>
+        </div>
+        <div class="cache-box">
+          <div class="t">📄 lyrics.json</div>
+          <div class="s">詞評主體 · lyrics_hash 索引</div>
+        </div>
+        <div class="cache-box">
+          <div class="t">📄 sources.json</div>
+          <div class="s">URL 索引 → audio_hash</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow">排行榜</div>
+
+  <!-- ──── 排行榜 ──── -->
+  <div class="card bg-rank" style="padding:14px 22px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <div>
+        <span style="font-weight:700;font-size:16px">🏆 排行榜</span>
+        <span style="font-size:13px;opacity:.7;margin-left:8px">公開 dataset · 最多 100 名</span>
+      </div>
+      <div style="font-size:14px;background:#fff;padding:6px 14px;border-radius:8px;font-weight:700">
+        詞×0.4 + SongEval×0.3 + CE×0.3
+      </div>
+    </div>
+    <div style="font-size:12px;opacity:.7;margin-top:6px">
+      物理分獨立顯示為「發行就緒度」 · 前端無法偽造（只持 audio_hash）
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#0284c7"></span> 物理量測</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#a21caf"></span> 美學模型</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#db2777"></span> 情感弧線</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#ca8a04"></span> LLM 詞評</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#16a34a"></span> 快取</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#475569"></span> 輸入</span>
+  </div>
+
+</div>
+
+<p class="footer-note">
+  歌曲評審團 · 基於貓貓滿屋 song-jury 重製 · 橘系主題<br>
+  song_scorer.py · 評審團.py · 情感弧線.py · app.py · ALGORITHM.md
+</p>
+
+</body>
+</html>

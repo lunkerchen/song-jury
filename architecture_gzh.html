@@ -1,0 +1,618 @@
+<section style="max-width:677px;margin:0 auto;padding:8px;box-sizing:border-box;background:#fdfdf8;color:#4d4f46;font-family:'IBM Plex Sans',-apple-system,system-ui,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;line-height:1.75;">
+
+  <!-- ═══════════════ 1. 頭圖卡 hero-card ═══════════════ -->
+  <section style="background:#fdfdf8;border:1px solid #bfc1b7;border-radius:6px;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,system-ui,sans-serif;">
+    <section style="padding:28px 24px 22px;">
+      <section style="display:flex;align-items:center;gap:8px;margin-bottom:22px;">
+        <span style="width:8px;height:8px;background:#1e1f23;border-radius:50%;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <span style="font-size:10px;font-weight:700;letter-spacing:3px;color:#65675e;"><span leaf="">ALGORITHM</span></span>
+        <span style="flex:1;height:1px;background:#bfc1b7;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <span style="font-size:10px;color:#9ea096;font-weight:500;font-variant-numeric:tabular-nums;"><span leaf="">INTERNAL</span></span>
+      </section>
+      <section style="display:flex;align-items:stretch;gap:18px;">
+        <section style="flex:1;min-width:0;">
+          <p style="font-size:24px;font-weight:800;color:#23251d;margin:0 0 10px;line-height:1.15;letter-spacing:-0.75px;">
+            <span leaf="">歌曲評審團</span><span style="color:#4d4f46;"><span leaf="">&nbsp;·&nbsp;</span></span><span style="border-bottom:3px solid #e5e7e0;"><span leaf="">演算法架構全解析</span></span>
+          </p>
+          <section style="display:flex;align-items:center;gap:4px;margin-bottom:12px;">
+            <span style="width:22px;height:3px;background:#1e1f23;border-radius:2px;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+            <span style="width:8px;height:3px;background:#bfc1b7;border-radius:2px;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+          </section>
+          <p style="font-size:13px;color:#65675e;margin:0;line-height:1.7;"><span leaf="">三關評審 + 情感弧線 + LLM 詞評 — 從輸入到輸出的完整數據管線</span></p>
+        </section>
+      </section>
+    </section>
+    <section style="background:#1e1f23;padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <p style="font-size:12px;color:rgba(255,255,255,0.92);margin:0;font-weight:600;"><span leaf="">librosa 物理量測 → SongEval/Audiobox 美學 → NRC-VAD 情感 → LLM 詞評</span></p>
+      <section style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="background:#e5e7e0;color:#23251d;padding:3px 8px;border-radius:4px;font-size:8px;font-weight:700;border:1px solid #bfc1b7;"><span leaf="">音訊處理</span></span>
+        <span style="background:#e5e7e0;color:#23251d;padding:3px 8px;border-radius:4px;font-size:8px;font-weight:700;border:1px solid #bfc1b7;"><span leaf="">NLP 詞評</span></span>
+      </section>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 開篇引言 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="background:#fdfdf8;border:1px solid #bfc1b7;border-radius:6px;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="padding:10px 16px;background:#1e1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <p style="margin:0;font-size:10px;font-weight:800;letter-spacing:2px;color:#ffffff;"><span leaf="">OVERVIEW</span></p>
+        <span style="font-size:10px;color:rgba(255,255,255,0.65);"><span leaf="">三關架構</span></span>
+      </section>
+      <section style="padding:16px 18px 18px;background:#eeefe9;">
+        <p style="margin:0;font-size:14px;line-height:1.9;color:#4d4f46;text-align:justify;">
+          <span leaf="">本系統由 </span>
+          <span style="background:#eeefe9;padding:1px 5px;border-radius:4px;font-weight:600;color:#23251d;border:1px solid #bfc1b7;"><span leaf="">song_scorer.py</span></span>
+          <span leaf="">（物理量測）、</span>
+          <span style="background:#eeefe9;padding:1px 5px;border-radius:4px;font-weight:600;color:#23251d;border:1px solid #bfc1b7;"><span leaf="">SongEval</span></span>
+          <span leaf=""> 與 </span>
+          <span style="background:#eeefe9;padding:1px 5px;border-radius:4px;font-weight:600;color:#23251d;border:1px solid #bfc1b7;"><span leaf="">Audiobox</span></span>
+          <span leaf="">（美學模型）、</span>
+          <span style="background:#eeefe9;padding:1px 5px;border-radius:4px;font-weight:600;color:#23251d;border:1px solid #bfc1b7;"><span leaf="">NRC-VAD</span></span>
+          <span leaf="">（情感弧線）與 </span>
+          <span style="background:#eeefe9;padding:1px 5px;border-radius:4px;font-weight:600;color:#23251d;border:1px solid #bfc1b7;"><span leaf="">DeepSeek/Groq LLM</span></span>
+          <span leaf="">（詞評）四大引擎組成。輸入支援 SUNO 連結、YouTube 連結或直接上傳音檔，一首歌約 2–3 分鐘跑完三關 + 情感弧線 + 詞評。</span>
+        </p>
+      </section>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 01 整體架構 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">01</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">ARCH</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">整體流程</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">三關評審 + 快取層</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- 流程示意圖 SVG -->
+  <section style="margin-top:24px;">
+    <section style="background:#eeefe9;border-radius:6px;padding:22px 18px;border:1px solid #bfc1b7;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <p style="font-size:10px;color:#65675e;margin:0 0 4px;text-transform:uppercase;letter-spacing:2px;font-weight:600;"><span leaf="">DATA PIPELINE</span></p>
+      <p style="font-size:13px;color:#23251d;font-weight:600;margin:0 0 12px;"><span leaf="">輸入到輸出的完整數據流向</span></p>
+      <svg viewBox="0 0 460 160" style="width:100%;height:auto;" role="img" aria-label="流程示意">
+        <!-- 輸入層 -->
+        <rect x="8" y="6" width="60" height="34" rx="4" fill="#1e1f23"></rect>
+        <text x="38" y="28" font-size="9" fill="#fff" text-anchor="middle" font-weight="700" font-family="IBM Plex Sans,sans-serif"><tspan leaf="">輸入</tspan></text>
+        <!-- 箭頭 1 -->
+        <line x1="68" y1="23" x2="84" y2="23" stroke="#4d4f46" stroke-width="1.5"></line>
+        <polygon points="84,19 92,23 84,27" fill="#4d4f46"></polygon>
+        <!-- 第一關 -->
+        <rect x="96" y="6" width="72" height="34" rx="4" fill="#fdfdf8" stroke="#4d4f46" stroke-width="1.5"></rect>
+        <text x="132" y="22" font-size="8" fill="#23251d" text-anchor="middle" font-weight="700"><tspan leaf="">① 物理量測</tspan></text>
+        <text x="132" y="34" font-size="7" fill="#65675e" text-anchor="middle"><tspan leaf="">song_scorer</tspan></text>
+        <!-- 箭頭 2 -->
+        <line x1="168" y1="23" x2="184" y2="23" stroke="#4d4f46" stroke-width="1.5"></line>
+        <polygon points="184,19 192,23 184,27" fill="#4d4f46"></polygon>
+        <!-- 第二關 -->
+        <rect x="196" y="6" width="72" height="34" rx="4" fill="#fdfdf8" stroke="#4d4f46" stroke-width="1.5"></rect>
+        <text x="232" y="22" font-size="8" fill="#23251d" text-anchor="middle" font-weight="700"><tspan leaf="">② 美學模型</tspan></text>
+        <text x="232" y="34" font-size="7" fill="#65675e" text-anchor="middle"><tspan leaf="">SongEval+Audiobox</tspan></text>
+        <!-- 箭頭 3 -->
+        <line x1="268" y1="23" x2="284" y2="23" stroke="#4d4f46" stroke-width="1.5"></line>
+        <polygon points="284,19 292,23 284,27" fill="#4d4f46"></polygon>
+        <!-- 情感弧線 -->
+        <rect x="296" y="6" width="72" height="34" rx="4" fill="#d4c9b8" stroke="#b17816"></rect>
+        <text x="332" y="22" font-size="8" fill="#23251d" text-anchor="middle" font-weight="700"><tspan leaf="">情感弧線</tspan></text>
+        <text x="332" y="34" font-size="7" fill="#65675e" text-anchor="middle"><tspan leaf="">NRC-VAD</tspan></text>
+        <!-- 箭頭 4 -->
+        <line x1="368" y1="23" x2="384" y2="23" stroke="#4d4f46" stroke-width="1.5"></line>
+        <polygon points="384,19 392,23 384,27" fill="#4d4f46"></polygon>
+        <!-- 第三關 -->
+        <rect x="396" y="6" width="56" height="34" rx="4" fill="#1e1f23"></rect>
+        <text x="424" y="22" font-size="8" fill="#fff" text-anchor="middle" font-weight="700"><tspan leaf="">③ 詞評</tspan></text>
+        <text x="424" y="34" font-size="7" fill="#ed7b2f" text-anchor="middle"><tspan leaf="">LLM</tspan></text>
+        <!-- 下方快取層 -->
+        <rect x="96" y="70" width="356" height="48" rx="6" fill="#fdfdf8" stroke="#bfc1b7" stroke-width="1" stroke-dasharray="4,3"></rect>
+        <text x="274" y="84" font-size="7" fill="#9ea096" text-anchor="middle" font-weight="600" letter-spacing="1"><tspan leaf="">快取層（reports.json / lyrics.json / sources.json）</tspan></text>
+        <rect x="108" y="90" width="64" height="22" rx="4" fill="#e5e7e0" stroke="#bfc1b7"></rect>
+        <text x="140" y="105" font-size="8" fill="#23251d" text-anchor="middle" font-weight="600"><tspan leaf="">🟢 完全命中</tspan></text>
+        <rect x="190" y="90" width="64" height="22" rx="4" fill="#e5e7e0" stroke="#bfc1b7"></rect>
+        <text x="222" y="105" font-size="8" fill="#23251d" text-anchor="middle" font-weight="600"><tspan leaf="">🟡 重生裁決</tspan></text>
+        <rect x="272" y="90" width="64" height="22" rx="4" fill="#e5e7e0" stroke="#bfc1b7"></rect>
+        <text x="304" y="105" font-size="8" fill="#23251d" text-anchor="middle" font-weight="600"><tspan leaf="">🔴 全新評分</tspan></text>
+        <rect x="354" y="90" width="80" height="22" rx="4" fill="#d4c9b8" stroke="#b17816"></rect>
+        <text x="394" y="105" font-size="8" fill="#23251d" text-anchor="middle" font-weight="600"><tspan leaf="">🏆 排行榜</tspan></text>
+        <!-- 往上回饋箭頭 -->
+        <path d="M 130 70 L 130 46" stroke="#9ea096" stroke-width="1" stroke-dasharray="3,2" fill="none"></path>
+        <polygon points="130,46 126,52 134,52" fill="#9ea096"></polygon>
+        <path d="M 274 70 L 274 46" stroke="#9ea096" stroke-width="1" stroke-dasharray="3,2" fill="none"></path>
+        <polygon points="274,46 270,52 278,52" fill="#9ea096"></polygon>
+        <path d="M 360 70 L 360 46" stroke="#9ea096" stroke-width="1" stroke-dasharray="3,2" fill="none"></path>
+        <polygon points="360,46 356,52 364,52" fill="#9ea096"></polygon>
+        <!-- 來源輸入 -->
+        <rect x="8" y="134" width="60" height="22" rx="4" fill="#e5e7e0" stroke="#bfc1b7"></rect>
+        <text x="38" y="149" font-size="8" fill="#23251d" text-anchor="middle" font-weight="600"><tspan leaf="">SUNO/YT/檔</tspan></text>
+        <line x1="38" y1="126" x2="38" y2="40" stroke="#4d4f46" stroke-width="1"></line>
+        <polygon points="38,40 34,48 42,48" fill="#4d4f46"></polygon>
+      </svg>
+      <p style="font-size:11px;color:#65675e;margin:14px 0 0;border-top:1px solid #bfc1b7;padding-top:12px;line-height:1.5;"><span leaf="">三關依序執行，情感弧線為中介層供詞評交叉引用。快取層以音檔指紋和歌詞指紋雙索引，大幅節省重複評分的算力與 API 費用。</span></p>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 02 第一關 物理量測 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">02</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">PHYS</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">第一關：物理量測</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">song_scorer.py · librosa + pyloudnorm + parselmouth</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <p style="margin:0;font-size:14px;line-height:1.9;text-align:justify;color:#4d4f46;">
+        <span leaf="">程式無法「聽懂」音樂，但能量測聲音的物理特徵。先自動偵測 </span>
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">調性（Krumhansl-Kessler chroma correlation）</span></span>
+        <span leaf=""> 和 </span>
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">BPM（librosa beat_track + 拍距中位數外插網格）</span></span>
+        <span leaf=""> 作為內部基準，再對混音進行 7 項客觀量測，各項 0–100 分後加權。</span>
+      </p>
+    </section>
+  </section>
+
+  <!-- 7 項混音量測：條目列表卡 -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#ed7b2f;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;整體響度 （15%）</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;"><span leaf="">pyloudnorm 量測 integrated LUFS。以 -14 LUFS（串流標準）為高分中心，偏離越遠越低。LUFS &gt; -13.5 建議正規化，-14.6 ~ -13.5 標示「發行就緒」。</span></p>
+    </section>
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;margin-top:14px;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#4d4f46;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;動態範圍 （20%）</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;"><span leaf="">峰值／均方根比 (crest factor)。4–16 dB 之間最佳，過低表示壓縮過重，過高表示動態失控。</span></p>
+    </section>
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;margin-top:14px;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#ed7b2f;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;頻譜平衡 （20%）</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;"><span leaf="">STFT 能量分四區：低 60–250Hz、中低 250–2k、中高 2k–6k、空氣 6k+。每區定義合理佔比範圍，偏離越多 penalty 越大，公式為 clip(100 − 250 × penalty, 30, 100)。</span></p>
+    </section>
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;margin-top:14px;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#4d4f46;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;立體聲寬度 （10%）</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;"><span leaf="">以 (L−R)/(L+R) 的 RMS 比計算寬度指數，輔以左右相關係數。指數 0.2–0.7 最佳，過低趨近單聲道，過高有反相風險。</span></p>
+    </section>
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;margin-top:14px;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#ed7b2f;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;削波檢測 （10%）</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;"><span leaf="">樣本點觸頂（>0.999）比例。0% 為滿分，超過 0.1% 即大幅扣分。</span></p>
+    </section>
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;margin-top:14px;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#4d4f46;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;層次鋪陳 （15%）</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;"><span leaf="">切 8 段量 RMS 落差與頻譜質心變異係數，加權 6：4。能量落差 6–15 dB 配合音色變化，分數最高。</span></p>
+    </section>
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;margin-top:14px;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#ed7b2f;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;和聲豐富度 （10%）</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;"><span leaf="">諧波分離後 chroma CQT 計算所用音級數（6–9 最佳）與半小節解析度的和弦變化率（0.15–2.0 次/秒最佳），兩者平均。</span></p>
+    </section>
+  </section>
+
+  <!-- 總分公式：重點觀點卡 -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="background:#fdfdf8;border-radius:6px;padding:16px 18px;border:1px solid #bfc1b7;">
+        <p style="font-size:14px;color:#4d4f46;margin:0;line-height:1.8;text-align:justify;">
+          <strong style="color:#23251d;border-bottom:3px solid #ed7b2f;"><span leaf="">總分 = Σ(score_i × weight_i) / Σ(weight_i)</span></strong><span leaf="">&nbsp;缺項自動剔除並重新正規化權重。等級：S ≥ 90、A ≥ 80、B ≥ 70、C ≥ 60、D &lt; 60。演唱分析為選配（需人聲軌或 demucs 分離），含音準、節奏、顫音、音域等 7 項。</span>
+        </p>
+      </section>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 03 第二關 美學模型 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">03</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">AES</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">第二關：美學模型</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">SongEval + Audiobox Aesthetics</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- SongEval -->
+  <section style="margin-top:24px;">
+    <section style="background:#fdfdf8;border:1px solid #bfc1b7;border-radius:6px;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="padding:10px 16px;background:#1e1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <p style="margin:0;font-size:10px;font-weight:800;letter-spacing:2px;color:#ffffff;"><span leaf="">SONGEVAL</span></p>
+        <span style="font-size:10px;color:rgba(255,255,255,0.65);"><span leaf="">音樂人訓練模型 · 1–5 分</span></span>
+      </section>
+      <section style="padding:16px 18px 18px;background:#eeefe9;">
+        <p style="margin:0;font-size:14px;line-height:1.9;color:#4d4f46;text-align:justify;">
+          <span leaf="">複製自 </span>
+          <span style="background:#eeefe9;padding:1px 5px;border-radius:4px;font-weight:600;color:#23251d;border:1px solid #bfc1b7;"><span leaf="">ASLP-lab/SongEval</span></span>
+          <span leaf="">（CC BY-NC-SA，Space 啟動時 git clone）。五維度各有 1–5 分，取平均後給等級判定：優秀 ≥4.25、良好 ≥3.5、中等 ≥2.75。任一維度低於 4 時特別標註。</span>
+        </p>
+        <p style="margin:6px 0 0;font-size:13px;color:#4d4f46;line-height:1.8;text-align:justify;">
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">整體連貫性</span></span>
+          <span leaf=""> — 段落銜接、整體流暢度；</span>
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">整體音樂性</span></span>
+          <span leaf=""> — 旋律與編曲的音樂質感；</span>
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">記憶點</span></span>
+          <span leaf=""> — hook 的記憶程度；</span>
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">結構清晰度</span></span>
+          <span leaf=""> — 主副歌結構；</span>
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">人聲自然度</span></span>
+          <span leaf=""> — 聽感自然程度。</span>
+        </p>
+      </section>
+    </section>
+  </section>
+
+  <!-- Audiobox -->
+  <section style="margin-top:24px;">
+    <section style="background:#fdfdf8;border:1px solid #bfc1b7;border-radius:6px;overflow:hidden;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="padding:10px 16px;background:#1e1f23;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <p style="margin:0;font-size:10px;font-weight:800;letter-spacing:2px;color:#ffffff;"><span leaf="">AUDIOBOX</span></p>
+        <span style="font-size:10px;color:rgba(255,255,255,0.65);"><span leaf="">Meta 美學模型 · 1–10 分</span></span>
+      </section>
+      <section style="padding:16px 18px 18px;background:#eeefe9;">
+        <p style="margin:0;font-size:14px;line-height:1.9;color:#4d4f46;text-align:justify;">
+          <span leaf="">audiobox-aesthetics v0.0.4，四軸評分。其中 </span>
+          <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">CE（內容感染力）</span></span>
+          <span leaf=""> 若低於 7 分，自動觸發親聽檢查警報，提醒使用者戴上耳機確認情緒傳達。</span>
+        </p>
+        <p style="margin:6px 0 0;font-size:13px;color:#4d4f46;line-height:1.8;text-align:justify;">
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">PQ</span></span>
+          <span leaf=""> 混音清晰度・</span>
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">CE</span></span>
+          <span leaf=""> 感染力・</span>
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">CU</span></span>
+          <span leaf=""> 場景適配・</span>
+          <span style="background:#e5e7e0;padding:2px 8px;border-radius:4px;font-weight:600;color:#23251d;font-size:12px;"><span leaf="">PC</span></span>
+          <span leaf=""> 編曲密度（描述性，非越高越好）。</span>
+        </p>
+      </section>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 04 情感弧線 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">04</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">EMO</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">中介：情感弧線</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">情感弧線.py · NRC-VAD Russell 模型</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <p style="margin:0;font-size:14px;line-height:1.9;text-align:justify;color:#4d4f46;">
+        <span leaf="">以 </span>
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">Russell (1980) 情感環狀模型</span></span>
+        <span leaf=""> 為理論基礎，Valence（愉悅度）× Arousal（激動度）雙軸 0–1 制。詞庫使用加拿大國家研究院的 NRC-VAD Lexicon，中英雙語自動偵測：含中文字元用中文詞庫（簡+繁合併、最長匹配掃描），否則用英文原生詞庫。</span>
+      </p>
+    </section>
+  </section>
+
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="background:#fdfdf8;border-radius:6px;padding:16px 18px;border:1px solid #bfc1b7;">
+        <p style="font-size:14px;color:#4d4f46;margin:0;line-height:1.8;text-align:justify;">
+          <strong style="color:#23251d;border-bottom:3px solid #ed7b2f;"><span leaf="">歌詞.txt → 段落分割 → NRC-VAD 查表 → 逐段 V/A 均值 → 雙圖 PNG</span></strong><span leaf="">&nbsp;輸出三段式分析（最負面詞 Top 3、最激動詞 Top 3）與 matplotlib 雙圖：上圖為 V/A 隨段落折線（含 0.5 中性線），下圖為 Russell 平面路徑。擺幅 ≥0.05 判定為有意義情緒移動。數據包裝成 _measure_block() 餵給詞評 LLM 做合議庭裁決的交叉引用佐證。</span>
+        </p>
+      </section>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 05 第三關 詞評 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">05</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">LLM</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">第三關：AI 詞評</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">LLM 多供應商鏈 · DeepSeek → Groq fallback</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- 供應商對照表 -->
+  <section style="margin-top:24px;">
+    <section style="border-radius:6px;overflow:hidden;border:1px solid #bfc1b7;background:#fdfdf8;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;background:#eeefe9;border-bottom:1px solid #bfc1b7;">
+        <section style="width:18%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;"><span leaf="">順位</span></section>
+        <section style="width:22%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">供應商</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">模型</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">特性</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:18%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">🥇</span></section>
+        <section style="width:22%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">DeepSeek</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:13px;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">deepseek-v4-pro</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">671B，中文最強 · 240s</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:18%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">🥈</span></section>
+        <section style="width:22%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">Groq</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:13px;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">gpt-oss-120b</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">免費，快 · 90s</span></section>
+      </section>
+      <section style="display:flex;">
+        <section style="width:18%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">🥉</span></section>
+        <section style="width:22%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">Groq</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:13px;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">llama-3.3-70b</span></section>
+        <section style="width:30%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">免費，最穩底線 · 90s</span></section>
+      </section>
+    </section>
+  </section>
+
+  <!-- Prompt 結構 -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <p style="margin:0 0 6px;">
+        <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+          <span style="display:inline-block;width:6px;height:6px;background:#ed7b2f;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;Prompt 結構</span>
+        </span>
+      </p>
+      <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;">
+        <span leaf="">「_lyric_prompt()」封裝約 1.5K 字的評詞標準（LEAN_RUBRIC）與實際量測數據，組成 4–8K tokens 的完整 prompt，max_tokens=5000。依序要求 LLM 輸出：題材定尺、七維度雙分數表格（作品分 + 爆款分）、情感三支柱、傳播假設檢查表、句級修法、場景適配表、合議庭裁決，最後強制附上 </span>
+        <span style="background:#eeefe9;padding:1px 5px;border-radius:4px;font-weight:600;color:#23251d;border:1px solid #bfc1b7;"><span leaf="">【詞總分】X.X</span></span>
+        <span leaf=""> 供排行榜排序。</span>
+      </p>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 06 排行榜 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">06</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">RANK</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">排行榜計分</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">作品發行視角加權 · 最多 100 名</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- 計分公式：重點觀點卡 -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="background:#fdfdf8;border-radius:6px;padding:16px 18px;border:1px solid #bfc1b7;">
+        <p style="font-size:14px;color:#4d4f46;margin:0;line-height:1.8;text-align:justify;">
+          <strong style="color:#23251d;border-bottom:3px solid #ed7b2f;"><span leaf="">Total = 詞分×10×0.4 + (SongEval平均÷5×100)×0.3 + CE×10×0.3</span></strong>
+        </p>
+      </section>
+    </section>
+  </section>
+
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <p style="margin:0;font-size:14px;line-height:1.9;text-align:justify;color:#4d4f46;">
+        <span leaf="">詞佔 40%、SongEval 美學佔 30%、CE 感染力佔 30%。</span>
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">物理分獨立顯示為「發行就緒度」</span></span>
+        <span leaf="">，不混入總分——因為後製可抹平，不應影響歌曲本身評價。前端只持有 audio_hash，分數由伺服器自 JSON 快取重算，無法偽造。同名自動加 v2/v3 去重。LLM 漏寫詞總分行時，自動從七維度表格平均值補。</span>
+      </p>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 07 快取系統 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">07</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">CACHE</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">快取與聰明重評</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">三層快取索引 · 版本化失效</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- 三張快取表 -->
+  <section style="margin-top:24px;">
+    <section style="border-radius:6px;overflow:hidden;border:1px solid #bfc1b7;background:#fdfdf8;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;background:#eeefe9;border-bottom:1px solid #bfc1b7;">
+        <section style="width:28%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;"><span leaf="">快取表</span></section>
+        <section style="width:32%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">索引</span></section>
+        <section style="width:40%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">用途</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:28%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">reports.json</span></section>
+        <section style="width:32%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">audio_hash SHA256:16</span></section>
+        <section style="width:40%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">音訊三關結果 + 裁決集</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:28%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">lyrics.json</span></section>
+        <section style="width:32%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">lyrics_hash (去空白)</span></section>
+        <section style="width:40%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">詞評主體（版本化 rv=v8）</span></section>
+      </section>
+      <section style="display:flex;">
+        <section style="width:28%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">sources.json</span></section>
+        <section style="width:32%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">正規化 URL</span></section>
+        <section style="width:40%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">連結 → audio_hash 映射</span></section>
+      </section>
+    </section>
+  </section>
+
+  <!-- 快取命中邏輯：條目列表卡 -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="margin-bottom:14px;">
+        <p style="margin:0 0 6px;">
+          <span style="display:inline-block;font-size:13px;font-weight:700;color:#23251d;background:#e5e7e0;padding:3px 10px;border-radius:999px;border:1px solid #bfc1b7;">
+            <span style="display:inline-block;width:6px;height:6px;background:#ed7b2f;border-radius:50%;margin-right:5px;vertical-align:middle;overflow:hidden;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span><span leaf="">&nbsp;快取命中邏輯</span>
+          </span>
+        </p>
+        <p style="font-size:13px;color:#4d4f46;margin:0;line-height:1.7;text-align:justify;">
+          <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">🟢 完全命中</span></span>
+          <span leaf="">：同音檔 × 同歌詞 → 整份沿用，零算力花費。</span>
+          <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">🟡 詞評命中</span></span>
+          <span leaf="">：詞評主體沿用，僅重生「合議庭裁決」段落（小額 DeepSeek）。</span>
+          <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">🔴 全新</span></span>
+          <span leaf="">：完整三關 + 詞評。版本控制 ENGINE_VERSION 與 RUBRIC_VERSION 任一 bump 即觸發對應快取失效。</span>
+        </p>
+      </section>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 08 檔案關係 + 依賴 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:14px;">
+        <section style="text-align:center;flex-shrink:0;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#23251d;line-height:1;letter-spacing:-2px;"><span leaf="">08</span></p>
+          <p style="margin:0;font-size:8px;font-weight:700;color:#9ea096;letter-spacing:2px;"><span leaf="">DEPS</span></p>
+        </section>
+        <span style="width:1px;height:36px;background:#bfc1b7;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+        <section>
+          <p style="margin:0 0 1px;font-size:17px;font-weight:800;color:#23251d;letter-spacing:0.2px;"><span leaf="">元件關係與依賴</span></p>
+          <p style="margin:0;font-size:11px;font-weight:600;color:#65675e;letter-spacing:1.2px;"><span leaf="">檔案層級 · 第三方套件 · runtime 資源</span></p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- 檔案清單 -->
+  <section style="margin-top:24px;">
+    <section style="background:#eeefe9;border-radius:6px;padding:16px 18px;border:1px solid #bfc1b7;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <span style="font-size:11px;font-weight:800;color:#65675e;letter-spacing:2px;"><span leaf="">PROJECT</span></span>
+        <span style="flex:1;height:1px;background:#bfc1b7;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;"><span leaf="">&nbsp;</span></span>
+      </section>
+      <p style="margin:0 0 6px;font-size:13px;line-height:1.8;color:#4d4f46;">
+        <span leaf="">song-jury-labangram/</span>
+      </p>
+      <p style="margin:0 0 4px;font-size:13px;line-height:1.8;color:#4d4f46;padding-left:8px;">
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">app.py</span></span>
+        <span leaf=""> ← Gradio 主控（三關排程 + LLM + 快取 + 排行榜 API）</span>
+      </p>
+      <p style="margin:0 0 4px;font-size:13px;line-height:1.8;color:#4d4f46;padding-left:8px;">
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">評審團.py</span></span>
+        <span leaf=""> ← 下載器 + 子程序整合器</span>
+      </p>
+      <p style="margin:0 0 4px;font-size:13px;line-height:1.8;color:#4d4f46;padding-left:8px;">
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">song_scorer.py</span></span>
+        <span leaf=""> ← 物理量測核心</span>
+      </p>
+      <p style="margin:0 0 4px;font-size:13px;line-height:1.8;color:#4d4f46;padding-left:8px;">
+        <span style="border-bottom:2px solid #ed7b2f;font-weight:600;color:#23251d;"><span leaf="">情感弧線.py</span></span>
+        <span leaf=""> ← NRC-VAD 情緒分析</span>
+      </p>
+      <p style="margin:0 0 4px;font-size:13px;line-height:1.8;color:#4d4f46;padding-left:8px;">
+        <span leaf="">requirements.txt / README.md / ALGORITHM.md / .gitattributes</span>
+      </p>
+    </section>
+  </section>
+
+  <!-- 第三方依賴 -->
+  <section style="margin-top:24px;">
+    <section style="border-radius:6px;overflow:hidden;border:1px solid #bfc1b7;background:#fdfdf8;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="display:flex;background:#eeefe9;border-bottom:1px solid #bfc1b7;">
+        <section style="width:25%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;"><span leaf="">層</span></section>
+        <section style="width:75%;padding:10px 12px;font-size:12px;font-weight:800;color:#23251d;border-left:1px solid #bfc1b7;"><span leaf="">套件</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:25%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">物理量測</span></section>
+        <section style="width:75%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">librosa, numpy, scipy, soundfile, pyloudnorm, praat-parselmouth, matplotlib</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:25%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">美學 A</span></section>
+        <section style="width:75%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">torch, torchaudio, muq==0.1.0</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:25%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">美學 B</span></section>
+        <section style="width:75%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">audiobox-aesthetics==0.0.4, transformers, einops</span></section>
+      </section>
+      <section style="display:flex;border-bottom:1px solid #bfc1b7;">
+        <section style="width:25%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">詞評</span></section>
+        <section style="width:75%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">requests, huggingface_hub</span></section>
+      </section>
+      <section style="display:flex;">
+        <section style="width:25%;padding:10px 12px;font-size:13px;color:#23251d;"><span leaf="">輸入</span></section>
+        <section style="width:75%;padding:10px 12px;font-size:13px;color:#4d4f46;border-left:1px solid #bfc1b7;"><span leaf="">yt-dlp</span></section>
+      </section>
+    </section>
+  </section>
+
+  <section style="margin-top:24px;">
+    <section style="font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <p style="margin:0;font-size:13px;line-height:1.8;color:#65675e;">
+        <span leaf="">runtime 取得的第三方資源：SongEval/ 從 GitHub ASLP-lab 克隆（CC BY-NC-SA）；lexicon/ 從私有 HF 資料集或官方學術站取得 NRC-VAD 情緒詞典。</span>
+      </p>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 收束：暗色摘要邊框 ═══════════════ -->
+  <section style="margin-top:24px;">
+    <section style="background:#1e1f23;border:1px solid #23251d;padding:8px;box-sizing:border-box;border-radius:6px;font-family:'IBM Plex Sans',-apple-system,sans-serif;">
+      <section style="border:1px solid rgba(255,255,255,0.16);border-radius:4px;padding:20px 22px;">
+        <p style="margin:0 0 8px;font-size:10px;line-height:1.6;color:#a3a3a3;letter-spacing:4px;font-weight:800;"><span leaf="">SUMMARY</span></p>
+        <p style="margin:0;font-size:16px;line-height:1.9;color:#fafafa;font-weight:700;"><span leaf="">song_scorer.py 的 7 項物理量測 ＋ SongEval 五維 ＋ Audiobox 四軸 ＋ NRC-VAD 情感弧線 ＋ DeepSeek→Groq 詞評，構成一套從物理到文本的全自動歌曲評審管線。快取層以雙指紋索引聰明重評，排行榜以前端不可偽造的方式呈現作品發行視角下的綜合排名。核心設計目標：在零付費 API 額度的前提下，提供有客觀數據錨點的創作診斷。</span></p>
+      </section>
+    </section>
+  </section>
+
+  <!-- ═══════════════ 結尾 ═══════════════ -->
+</section>
+
+<p style="display:none;">
+  <mp-style-type data-value="3"></mp-style-type>
+</p>

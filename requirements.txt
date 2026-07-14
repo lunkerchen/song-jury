@@ -1,0 +1,31 @@
+# song-jury HF Space (ZeroGPU / CPU 執行) 依賴
+# gradio、spaces 由 HF ZeroGPU 建置環境自動安裝(gradio 版本見 README 的 sdk_version)，此處不列。
+# 原則：只釘死「必要」版本(torch 受 ZeroGPU 限制、muq/audiobox 需特定版)，
+# 其餘一律不釘，交給 HF pip 解相容——避免釘到「本機 uv 有、但 PyPI 沒有」的版本(如 networkx 3.6.1)。
+
+# ZeroGPU 要 torch 2.8+(實測 SongEval/Audiobox 在 2.8 可跑)
+torch==2.8.0
+torchaudio==2.8.0
+torchvision==0.23.0
+
+# 第一關 物理 + 情感弧線繪圖
+librosa
+numpy
+scipy
+scikit-learn
+soundfile
+pyloudnorm
+praat-parselmouth
+matplotlib
+
+# 第二關 美學：SongEval(MuQ)+ Meta Audiobox
+muq==0.1.0
+audiobox-aesthetics==0.0.4
+transformers
+einops
+hydra-core
+omegaconf
+
+# 輸入
+yt-dlp
+requests

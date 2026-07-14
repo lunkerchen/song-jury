@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+.venv-ml/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# HF Space
+下載/
+SongEval/
+lexicon/
+**/__pycache__/
+
+# Cache/temp
+_tmp_*
+*.part
